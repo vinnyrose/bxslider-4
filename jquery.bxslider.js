@@ -194,7 +194,9 @@
 			// also strip any margin and padding from el
 			el.css({
 				width: slider.settings.mode == 'horizontal' ? (slider.children.length * 100 + 215) + '%' : 'auto',
-				position: 'relative'
+				position: 'relative',
+				margin: '0 0 0 0',
+				padding: '0 0 0 0'
 			});
 			// if using CSS, add the easing property
 			if(slider.usingCSS && slider.settings.easing){
@@ -515,13 +517,22 @@
 			// if not last slide
 			}else{
 				// get the position of the first showing slide
-				var position = slider.children.eq(slider.active.index * getMoveBy()).position();
+				var firstIndex = slider.active.index * getMoveBy(),
+		        position = slider.children.eq(firstIndex).position();
 				// check for last slide
 				if (slider.active.index == getPagerQty() - 1) slider.active.last = true;
 				// set the repective position
 				if (position != undefined){
-					if (slider.settings.mode == 'horizontal') setPositionProperty(-position.left, 'reset', 0);
-					else if (slider.settings.mode == 'vertical') setPositionProperty(-position.top, 'reset', 0);
+					if (slider.settings.mode == 'horizontal')
+					{
+						position.left = (slider.active.index + 1) * slider.children.eq(firstIndex).outerWidth(true);
+						setPositionProperty(-position.left, 'reset', 0);
+					}
+					else if (slider.settings.mode == 'vertical')
+					{
+						position.top = (slider.active.index + 1) * slider.children.eq(firstIndex).outerHeight(true);
+						setPositionProperty(-position.top, 'reset', 0);
+					}
 				}
 			}
 		}
